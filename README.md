@@ -1,5 +1,6 @@
 # TO DO 
 ### - user registration
+### - add book
 
 # DONE 
 ### - login hashed
