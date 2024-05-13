@@ -96,7 +96,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`userId`, `username`, `passwordHash`, `name`, `contact`, `role`) VALUES
 (-1, 'admin', '$2a$12$RxLjYo.k/6io4TKsYk1UJeAH73p3P5fAp5OGYNWpVkyx2di0GpR72', NULL, NULL, 'admin'),
-(1, 'adel', '$2a$12$7vf0xJK4Ca1MMrokPI.AfuZStcki7yhu4mAVjSh.4LwcpF0W7v86.', 'adel', '20802418', 'student');
+(1, 'adel', '$2a$12$7vf0xJK4Ca1MMrokPI.AfuZStcki7yhu4mAVjSh.4LwcpF0W7v86.', 'adel', '1111111', 'student');
 
 --
 -- Indexes for dumped tables

@@ -1,6 +1,5 @@
 package com.tekup.biblio.gui;
 
-import com.tekup.biblio.dao.AuthDao;
 import com.tekup.biblio.dao.StudentDao;
 import com.tekup.biblio.models.Student;
 import com.tekup.biblio.models.User;
@@ -76,8 +75,7 @@ public class RegisterGUI extends JFrame {
         registerButton = new JButton("Register");
         gbc.gridx = 0;
         gbc.gridy = 5;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
+
         add(registerButton, gbc);
         registerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -103,10 +101,27 @@ public class RegisterGUI extends JFrame {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-                new LoginGUI().setVisible(true);
+                new LoginGUI();
                 dispose();
             }
         });
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    new LoginGUI();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+                dispose();
+            }
+        });
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        add(cancelButton, gbc);
+
 
         setVisible(true);
     }

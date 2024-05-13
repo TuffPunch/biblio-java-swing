@@ -68,6 +68,7 @@ public class ListBooksGUI extends JFrame {
                     rowData.add("Return");
                 else
                     rowData.add("");
+
                 rowData.add("Delete");
             }
             model.addRow(rowData.toArray());

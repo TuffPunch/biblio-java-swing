@@ -94,7 +94,7 @@ public class BorrowDao {
 
     public ArrayList<Borrow> getStudentBorrows(int studentId) throws Exception {
         String sql = "SELECT * FROM borrow WHERE studentId = ?";
-        //String sqlActiveOnly = "SELECT * FROM borrow WHERE studentId = ? and returnDate IS NOT NULL";
+
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, studentId);
         ResultSet resultSet = statement.executeQuery();

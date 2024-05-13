@@ -28,23 +28,6 @@ public class AuthDao {
         }
     }
 
-    public User getUserByUsername(String username) throws SQLException {
-        String sql = "SELECT * FROM users WHERE username = ?";
-        try (Connection connection = DriverManager.getConnection(url, USERNAME, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, username);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                int userId = resultSet.getInt("userId");
-                String retrievedUsername = resultSet.getString("username");
-                String role = resultSet.getString("role");
-                return new User(userId, retrievedUsername, "", role);
-            } else {
-                return null; // user not found
-            }
-        }
-    }
-
     public User getUserHashPassword(String username) throws SQLException {
         String sql = "SELECT * FROM users WHERE username = ?";
         try (Connection connection = DriverManager.getConnection(url, USERNAME, password);
@@ -63,14 +46,13 @@ public class AuthDao {
 
     public User login(String username, String password) throws SQLException {
         User user = getUserHashPassword(username);
+        if (!user.verifyPassword(password))
+            return null;
 
-        if (user != null) {
-            if (user.getRole().equals("student"))
-                return new StudentDao().getStudentByUsername(username);
-            else
-                return new Admin(new User(-1, username, "", user.getRole()));
-        }
-        return null;
+        if (user.getRole().equals("student"))
+            return new StudentDao().getStudentByUsername(username);
+        else
+            return new Admin(new User(-1, username, "", user.getRole()));
     }
 
 
