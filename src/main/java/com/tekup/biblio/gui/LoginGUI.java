@@ -14,7 +14,7 @@ public class LoginGUI extends JFrame implements ActionListener {
     private JTextField usernameField;
     private JLabel passwordLabel;
     private JPasswordField passwordField;
-    private JButton loginButton;
+    private JButton loginButton, registerButton;
 
     public LoginGUI() {
         super("Library Management System - Login"); // Set window title
@@ -25,6 +25,8 @@ public class LoginGUI extends JFrame implements ActionListener {
         passwordField = new JPasswordField(20);
         loginButton = new JButton("Login");
         loginButton.addActionListener(this); // Register this class as the listener for button clicks
+        registerButton = new JButton("Register");
+        registerButton.addActionListener(this); // Register this class as the listener for button clicks
 
         // Organize layout using a GridBagLayout
         JPanel panel = new JPanel(new GridBagLayout());
@@ -54,6 +56,11 @@ public class LoginGUI extends JFrame implements ActionListener {
         c.gridwidth = 2; // Button spans 2 columns
         panel.add(loginButton, c);
 
+        // Add register button
+        c.gridy = 3;
+        c.gridwidth = 2; // Button spans 2 columns
+        panel.add(registerButton, c);
+
         // Add panel to the frame
         getContentPane().add(panel);
 
@@ -76,16 +83,12 @@ public class LoginGUI extends JFrame implements ActionListener {
                 User u = adao.login(username, password);
                 if (u != null) {
                     JOptionPane.showMessageDialog(this, "Login successful!");
-
                     new ListBooksGUI(u.getRole(), u.getUserId());
                     dispose();
-                    // Open main library management window here
                 } else {
-                    JOptionPane.showMessageDialog(this, "Invalid username or password.");
+                    JOptionPane.showMessageDialog(this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -93,6 +96,10 @@ public class LoginGUI extends JFrame implements ActionListener {
 
             // Clear password field after login attempt
             passwordField.setText("");
+        }
+         else if (e.getSource() == registerButton) {
+             new RegisterGUI();
+             dispose();
         }
     }
 

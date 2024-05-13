@@ -16,13 +16,12 @@ public class BookDao {
     private static final String password = "biblio";
 
     public void addBook(Book book) throws SQLException {
-        String sql = "INSERT INTO Books (bookId, title, author, publisher) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Books (title, author, publisher) VALUES (?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, USERNAME, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, book.getBookId());
-            preparedStatement.setString(2, book.getTitle());
-            preparedStatement.setString(3, book.getAuthor());
-            preparedStatement.setString(4, book.getPublisher()); // Added publisher
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.setString(2, book.getAuthor());
+            preparedStatement.setString(3, book.getPublisher()); // Added publisher
             preparedStatement.executeUpdate();
         }
     }

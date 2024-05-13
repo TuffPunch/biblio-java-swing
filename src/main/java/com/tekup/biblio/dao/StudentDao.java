@@ -17,6 +17,17 @@ public class StudentDao {
     private static final String USERNAME = "biblio";
     private static final String password = "biblio";
 
+    public int getLastStudentId() throws SQLException {
+        String sql = "SELECT max(userId) FROM users WHERE role = 'student'";
+        Connection connection = DriverManager.getConnection(url, USERNAME, password);
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+        return -1;
+    }
+
     public void addStudent(Student student) throws SQLException {
         String sql = "INSERT INTO users (userId, username, passwordHash, name, contact, role) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -27,7 +38,7 @@ public class StudentDao {
             preparedStatement.setString(3, student.hashPassword(student.getPasswordHash()));
             preparedStatement.setString(4, student.getName());
             preparedStatement.setString(5, student.getContact());
-            preparedStatement.setString(6, student.getRole());
+            preparedStatement.setString(6,"student");
             preparedStatement.executeUpdate();
         }
     }

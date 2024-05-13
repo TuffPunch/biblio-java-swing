@@ -12,6 +12,7 @@ public class AuthDao {
     private static final String password = "biblio";
 
 
+
     public void createAdmin(Admin admin) throws SQLException {
         String sql = "INSERT INTO users (userId, username, passwordHash, name, contact, role) VALUES (?, ?, ?, ?, ?, ?)";
 

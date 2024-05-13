@@ -82,7 +82,7 @@ public class ListBooksGUI extends JFrame {
                 Integer book = (Integer) table.getModel().getValueAt(modelRow, 0);
                 Window window = SwingUtilities.windowForComponent(bookTable);
                 if (borrowedBookIds.contains(book))
-                    JOptionPane.showMessageDialog(window, "Book is already borrowed");
+                    JOptionPane.showMessageDialog(window, "Book is already borrowed", "Error", JOptionPane.ERROR_MESSAGE);
                 else {
                     String bookName = (String) table.getModel().getValueAt(modelRow, 1);
                     JOptionPane.showMessageDialog(window, "Borrowing book " + bookName);
@@ -131,7 +131,7 @@ public class ListBooksGUI extends JFrame {
                         }
                     } else {
                         String bookName = (String) table.getModel().getValueAt(modelRow, 1);
-                        JOptionPane.showMessageDialog(window, "Book is not borrowed");
+                        JOptionPane.showMessageDialog(window, "Book is not borrowed", "Error", JOptionPane.ERROR_MESSAGE);
 
                     }
                 }
@@ -158,7 +158,8 @@ public class ListBooksGUI extends JFrame {
             addBookBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(getContentPane(), "Add book");
+                    new AddBookGUI(currentUserRole, userId);
+                    dispose();
                 }
             });
             c.gridx = 0;
