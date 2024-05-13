@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class AddBookGUI extends JFrame {
     private JTextField titleField, authorField, publisherField;
-    private JButton addButton;
+    private JButton addButton, cancelButton;
 
     public AddBookGUI(String currentUserRole, int userId) {
         setTitle("Add Book");
@@ -49,6 +49,19 @@ public class AddBookGUI extends JFrame {
                 }
             }
         });
+
+        cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    new ListBooksGUI(currentUserRole, userId);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+                dispose();
+            }
+        });
         c.gridx = 0;
         c.gridy = 0;
         panel.add(titleLabel, c);
@@ -73,6 +86,10 @@ public class AddBookGUI extends JFrame {
         c.gridx = 1;
         c.gridy = 3;
         panel.add(addButton, c);
+
+        c.gridx = 1;
+        c.gridy = 4;
+        panel.add(cancelButton, c);
 
         add(panel);
         setSize(400, 300);

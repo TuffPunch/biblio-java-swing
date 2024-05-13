@@ -61,4 +61,15 @@ public class BookDao {
         }
     }
 
+    public void deleteBook(int bookId) throws Exception {
+
+        String sql = "DELETE FROM books WHERE bookId = ?";
+        try (Connection connection = DriverManager.getConnection(url, USERNAME, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, bookId);
+            preparedStatement.executeUpdate();
+
+        }
+    }
+
 }

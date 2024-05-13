@@ -14,13 +14,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.Date;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListBooksGUI extends JFrame {
 
-    private final BookDao bookDao = new BookDao();
     private final BorrowDao borrowDao = new BorrowDao();
 
     public ListBooksGUI(String currentUserRole, int userId) throws Exception {
@@ -28,6 +27,7 @@ public class ListBooksGUI extends JFrame {
 
 
         // Get all books from the database
+        BookDao bookDao = new BookDao();
         List<Book> books = bookDao.getBooks();
         ArrayList<Borrow> borrows;
 
@@ -37,12 +37,9 @@ public class ListBooksGUI extends JFrame {
 
         // Add "Actions" column conditionally based on role
         columns.add("Actions");
+        if (currentUserRole.equals("admin"))
+            columns.add("Delete");
         borrows = borrowDao.getAllBorrows();
-//        if (currentUserRole.equals("student")) {
-//            borrows = borrowDao.getStudentBorrows(userId);
-//        } else {
-//            borrows = borrowDao.getAllBorrows();
-//        }
 
         List<Integer> borrowedBookIds = new ArrayList<Integer>();
         for (Borrow b : borrows){
@@ -69,6 +66,9 @@ public class ListBooksGUI extends JFrame {
             } else {
                 if (borrowedBookIds.contains(book.getBookId()))
                     rowData.add("Return");
+                else
+                    rowData.add("");
+                rowData.add("Delete");
             }
             model.addRow(rowData.toArray());
         }
@@ -102,7 +102,6 @@ public class ListBooksGUI extends JFrame {
             buttonColumn = new ButtonColumn(bookTable, borrowAction, 4);
             buttonColumn.setMnemonic(KeyEvent.VK_D);
         } else {
-            ArrayList<Borrow> finalBorrows = borrows;
             Action returnAction = new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -114,7 +113,7 @@ public class ListBooksGUI extends JFrame {
                         JOptionPane.showMessageDialog(window, " returning book");
                         try {
                             Borrow borrow = null;
-                            for (Borrow b : finalBorrows) {
+                            for (Borrow b : borrows) {
                                 if (b.getBook().getBookId() == book && b.getReturnDate() == null) {
                                     borrow = b;
                                     break;
@@ -140,6 +139,43 @@ public class ListBooksGUI extends JFrame {
             buttonColumn.setMnemonic(KeyEvent.VK_D);
         }
 
+        if (currentUserRole.equals("admin")){
+            Action deleteAction = new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JTable table = (JTable) e.getSource();
+                    int modelRow = Integer.parseInt(e.getActionCommand());
+
+                    // Get the book ID from the table model
+                    Integer bookId = (Integer) table.getModel().getValueAt(modelRow, 0);
+                    String bookName = (String) table.getModel().getValueAt(modelRow, 1);// Assuming book ID is in column 0
+
+                    // Confirmation dialog before deletion
+                    int confirmation = JOptionPane.showConfirmDialog(
+                            table,
+                            "Are you sure you want to delete "+ bookName +"?",
+                            "Delete Confirmation",
+                            JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (confirmation == JOptionPane.YES_OPTION) {
+                        try {
+                            // Delete book from database
+                            bookDao.deleteBook(bookId);
+
+                            //Remove row from table model
+                            ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }
+            };
+
+            ButtonColumn deleteBtnCln = new ButtonColumn(bookTable, deleteAction, 5);
+            deleteBtnCln.setMnemonic(KeyEvent.VK_D);
+        }
+
 
 
 
@@ -152,6 +188,18 @@ public class ListBooksGUI extends JFrame {
         c.insets = new Insets(10, 10, 10, 10); // Add spacing between elements
 
         JScrollPane scrollPane = new JScrollPane(bookTable);
+
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new LoginGUI();
+                dispose();
+            }
+        });
+        c.gridx = 1;
+        c.gridy = 0;
+        panel.add(logoutBtn, c);
 
         if (currentUserRole.equals("admin")){
             JButton addBookBtn = new JButton("Add Book");
@@ -168,8 +216,8 @@ public class ListBooksGUI extends JFrame {
         }
 
         // Add scroll pane to the frame
-        c.gridx = 1;
-        c.gridy = 0;
+        c.gridx = 0;
+        c.gridy = 1;
         panel.add(scrollPane, c);
         getContentPane().add(panel);
 

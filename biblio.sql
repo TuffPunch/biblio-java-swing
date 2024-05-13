@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2024 at 12:25 AM
+-- Generation Time: May 13, 2024 at 08:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `biblio`
 --
-
-CREATE DATABASE biblio;
-USE biblio;
 
 -- --------------------------------------------------------
 
@@ -42,9 +39,9 @@ CREATE TABLE `books` (
 --
 
 INSERT INTO `books` (`bookId`, `title`, `author`, `publisher`) VALUES
-(1, 'livre1', 'mimi', 'frej'),
 (2, 'livre2', 'mimi', 'frej'),
-(3, 'livre3', 'eya', 'naoel');
+(3, 'livre3', 'eya', 'naoel'),
+(4, 'java', 'adel', 'tekup');
 
 -- --------------------------------------------------------
 
@@ -56,8 +53,8 @@ CREATE TABLE `borrow` (
   `borrowId` int(20) NOT NULL,
   `borrowDate` date NOT NULL,
   `returnDate` date DEFAULT NULL,
-  `studentId` int(20) NOT NULL,
-  `bookId` int(20) NOT NULL
+  `studentId` int(20) DEFAULT NULL,
+  `bookId` int(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -65,12 +62,12 @@ CREATE TABLE `borrow` (
 --
 
 INSERT INTO `borrow` (`borrowId`, `borrowDate`, `returnDate`, `studentId`, `bookId`) VALUES
-(1, '2024-05-12', '2024-05-12', 1, 1),
+(1, '2024-05-12', '2024-05-12', 1, NULL),
 (4, '2024-05-12', '2024-05-12', 1, 2),
 (6, '2024-05-12', '2024-05-12', 1, 3),
 (7, '2024-05-12', '2024-05-12', 1, 2),
-(8, '2024-05-12', '2024-05-12', 1, 1),
-(9, '2024-05-12', '2024-05-12', 1, 1),
+(8, '2024-05-12', '2024-05-12', 1, NULL),
+(9, '2024-05-12', '2024-05-12', 1, NULL),
 (10, '2024-05-12', '2024-05-12', 1, 2),
 (11, '2024-05-12', '2024-05-12', 1, 3),
 (12, '2024-05-12', '2024-05-12', 1, 2);
@@ -128,6 +125,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `books`
+--
+ALTER TABLE `books`
+  MODIFY `bookId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `borrow`
 --
 ALTER TABLE `borrow`
@@ -141,8 +144,7 @@ ALTER TABLE `borrow`
 -- Constraints for table `borrow`
 --
 ALTER TABLE `borrow`
-  ADD CONSTRAINT `fk_book` FOREIGN KEY (`bookId`) REFERENCES `books` (`bookId`),
-  ADD CONSTRAINT `fk_student` FOREIGN KEY (`studentId`) REFERENCES `users` (`userId`);
+  ADD CONSTRAINT `fk_book` FOREIGN KEY (`bookId`) REFERENCES `books` (`bookId`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
