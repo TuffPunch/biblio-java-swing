@@ -114,7 +114,7 @@ public class ListBooksGUI extends JFrame {
                         try {
                             Borrow borrow = null;
                             for (Borrow b : borrows) {
-                                if (b.getBook().getBookId() == book && b.getReturnDate() == null) {
+                                if (b.getBook() != null && b.getBook().getBookId() == book && b.getReturnDate() == null) {
                                     borrow = b;
                                     break;
                                 }
